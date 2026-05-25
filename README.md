@@ -117,6 +117,34 @@ curl -X POST http://localhost:3000/cards/issue \
 
 Respuesta inmediata: `202`. Después de 3 reintentos (1s + 2s + 4s ≈ 7s), aparecerá un evento en `io.card.requested.v1.dlq`.
 
+#### Tip: cómo inspeccionar el DLQ
+
+Mientras `docker compose` esté corriendo, puedes leer el topic `io.card.requested.v1.dlq` usando el CLI que ya viene en el contenedor `io-kafka`:
+
+```bash
+docker exec -it io-kafka kafka-console-consumer \
+  --bootstrap-server localhost:9092 \
+  --topic io.card.requested.v1.dlq \
+  --from-beginning \
+  --property print.headers=true \
+  --property print.key=true
+```
+Otros comandos útiles:
+
+```bash
+docker exec -it io-kafka kafka-topics \
+  --bootstrap-server localhost:9092 --list
+
+docker exec -it io-kafka kafka-run-class kafka.tools.GetOffsetShell \
+  --broker-list localhost:9092 --topic io.card.requested.v1.dlq
+
+docker exec -it io-kafka kafka-topics \
+  --bootstrap-server localhost:9092 \
+  --delete --topic io.card.requested.v1.dlq
+```
+
+Flujo end-to-end recomendado para validar el DLQ: dejar un consumer abierto en una terminal con `--from-beginning`, en otra disparar el `curl` del caso 4 con `forceError: true`, y observar cómo después de ~7s (1s + 2s + 4s de backoff) llega el mensaje al DLQ.
+
 ### Health check
 
 ```bash
