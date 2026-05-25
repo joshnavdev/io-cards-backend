@@ -1,0 +1,39 @@
+{
+  "name": "io-cards-backend",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "packages/shared",
+    "packages/card-issuer",
+    "packages/card-processor"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint \"packages/**/src/**/*.ts\"",
+    "lint:fix": "eslint \"packages/**/src/**/*.ts\" --fix",
+    "format": "prettier --write \"packages/**/*.{ts,json}\" \"*.{json,js,mjs}\"",
+    "format:check": "prettier --check \"packages/**/*.{ts,json}\" \"*.{json,js,mjs}\"",
+    "test": "npm run test --workspaces --if-present",
+    "dev:issuer": "npm run dev -w @io/card-issuer",
+    "dev:processor": "npm run dev -w @io/card-processor",
+    "clean": "rm -rf packages/*/dist packages/*/node_modules packages/*/coverage packages/*/logs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^25.9.1",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^9.1.2",
+    "globals": "^15.15.0",
+    "prettier": "^3.8.3",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.4"
+  },
+  "author": "Joshua Navarro <joshua.navarro35@gmail.com>",
+  "license": "ISC"
+}
